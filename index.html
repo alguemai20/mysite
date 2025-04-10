@@ -49,11 +49,94 @@
     <div id="answer-buttons"></div>
     <p id="feedback"></p>
     <button id="next-button">Próxima ➡️</button>
-  </div> <p id="timer" style="font-size: 20px; color: #ff5252;">Tempo: 10s</p>
+  </div>
 
+  <script>
+    const questions = [
+      { question: "Qual é a capital do Brasil?", answers: ["São Paulo", "Brasília", "Rio de Janeiro", "Salvador"], correct: 1 },
+      { question: "Quanto é 7 + 3?", answers: ["10", "12", "9", "13"], correct: 0 },
+      { question: "Qual desses é um animal?", answers: ["Cacto", "Cachorro", "Pedra", "Fogo"], correct: 1 },
+      { question: "Quem descobriu o Brasil?", answers: ["Cristóvão Colombo", "Dom Pedro", "Pedro Álvares Cabral", "Jesus"], correct: 2 },
+      { question: "Qual o maior planeta do sistema solar?", answers: ["Marte", "Terra", "Júpiter", "Saturno"], correct: 2 },
+      { question: "Qual é a cor do céu?", answers: ["Verde", "Azul", "Rosa", "Laranja"], correct: 1 },
+      { question: "2 x 5 é igual a?", answers: ["7", "9", "10", "8"], correct: 2 },
+      { question: "Qual é o oposto de quente?", answers: ["Fervente", "Frio", "Morno", "Tórrido"], correct: 1 },
+      { question: "Quantas patas tem um gato?", answers: ["2", "3", "4", "5"], correct: 2 },
+      { question: "Qual som o pato faz?", answers: ["Quack", "Miau", "Au Au", "Oink"], correct: 0 }
+    ];
 
-    <script>
+    let currentQuestion = 0;
+    let timer;
+    const questionText = document.getElementById('question-text');
+    const answerButtons = document.getElementById('answer-buttons');
+    const feedback = document.getElementById('feedback');
+    const nextButton = document.getElementById('next-button');
+    const timerText = document.getElementById('timer');
 
-        <script> 
-      </body>
+    function showQuestion() {
+      clearInterval(timer);
+      startTimer(10);
+
+      const question = questions[currentQuestion];
+      questionText.textContent = question.question;
+      answerButtons.innerHTML = "";
+      feedback.textContent = "";
+
+      question.answers.forEach((answer, index) => {
+        const button = document.createElement("button");
+        button.textContent = answer;
+        button.onclick = () => checkAnswer(index);
+        answerButtons.appendChild(button);
+      });
+    }
+
+    function checkAnswer(index) {
+      const correctIndex = questions[currentQuestion].correct;
+      const buttons = answerButtons.getElementsByTagName("button");
+      for (let i = 0; i < buttons.length; i++) {
+        buttons[i].disabled = true;
+        if (i === correctIndex) buttons[i].classList.add("correct");
+        else if (i === index) buttons[i].classList.add("incorrect");
+      }
+
+      feedback.textContent = index === correctIndex ? "✔️ Acertou, parabéns!" : "❌ Errou! Tente a próxima...";
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        questionText.textContent = "🎉 Fim do quiz! Você arrasou!";
+        answerButtons.innerHTML = "";
+        nextButton.style.display = "none";
+        timerText.textContent = "";
+      }
+    }
+
+    function startTimer(seconds) {
+      let timeLeft = seconds;
+      timerText.textContent = `Tempo: ${timeLeft}s`;
+      timer = setInterval(() => {
+        timeLeft--;
+        timerText.textContent = `Tempo: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          feedback.textContent = "⏰ Tempo esgotado!";
+          const correctIndex = questions[currentQuestion].correct;
+          const buttons = answerButtons.getElementsByTagName("button");
+          for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+            if (i === correctIndex) buttons[i].classList.add("correct");
+          }
+        }
+      }, 1000);
+    }
+
+    nextButton.addEventListener("click", nextQuestion);
+
+    showQuestion();
+  </script>
+</body>
 </html>
+
