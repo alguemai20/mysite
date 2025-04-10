@@ -2,174 +2,58 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Quiz Maluco</title>
+  <title>Quiz Maluco 🤪</title>
   <style>
     body {
-      font-family: 'Comic Sans MS', cursive;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      color: #333;
+      font-family: 'Comic Sans MS', sans-serif;
+      background: linear-gradient(to right, #ff758c, #ff7eb3);
       text-align: center;
-      padding: 30px;
+      padding: 40px;
+      color: #fff;
     }
     #quiz-container {
-      background-color: #fff;
+      background: rgba(0, 0, 0, 0.3);
       padding: 30px;
-      border-radius: 12px;
+      border-radius: 20px;
       max-width: 600px;
       margin: auto;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
     button {
-      padding: 12px 20px;
       margin: 10px;
+      padding: 10px 20px;
       font-size: 16px;
+      border-radius: 10px;
       border: none;
-      border-radius: 8px;
-      background-color: #7efff5;
       cursor: pointer;
-      transition: 0.3s;
+      background-color: #fff;
+      color: #333;
     }
     button:hover {
-      background-color: #5ce1e6;
-    }
-    .feedback {
-      font-weight: bold;
-      margin-top: 20px;
-      font-size: 20px;
+      background-color: #ddd;
     }
     .correct {
-      color: green;
+      color: #00ffcc;
+      font-weight: bold;
     }
     .incorrect {
-      color: red;
+      color: #ff4d4d;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <div id="quiz-container">
-    <h1>Quiz Maluco 😜</h1>
+    <h1>🎉 Quiz Maluco</h1>
+    <p id="timer" style="font-size: 20px; color: #ffeb3b;">Tempo: 10s</p>
     <p id="question-text">Carregando pergunta...</p>
     <div id="answer-buttons"></div>
-    <div id="feedback" class="feedback"></div>
-    <button id="next-button" style="display: none;">Próxima</button>
-  </div>
+    <p id="feedback"></p>
+    <button id="next-button">Próxima ➡️</button>
+  </div> <p id="timer" style="font-size: 20px; color: #ff5252;">Tempo: 10s</p>
 
-  <script>
-    const questions = [
-      { question: "Qual é a capital do Brasil?", answers: [
-        { text: "São Paulo", correct: false },
-        { text: "Rio de Janeiro", correct: false },
-        { text: "Brasília", correct: true },
-        { text: "Salvador", correct: false }
-      ]},
-      { question: "Quanto é 5 x 5?", answers: [
-        { text: "25", correct: true },
-        { text: "20", correct: false },
-        { text: "10", correct: false },
-        { text: "15", correct: false }
-      ]},
-      { question: "Qual animal late?", answers: [
-        { text: "Gato", correct: false },
-        { text: "Papagaio", correct: false },
-        { text: "Cachorro", correct: true },
-        { text: "Cavalo", correct: false }
-      ]},
-      { question: "Qual planeta é conhecido como Planeta Vermelho?", answers: [
-        { text: "Terra", correct: false },
-        { text: "Marte", correct: true },
-        { text: "Júpiter", correct: false },
-        { text: "Saturno", correct: false }
-      ]},
-      { question: "Que cor resulta da mistura de azul com amarelo?", answers: [
-        { text: "Verde", correct: true },
-        { text: "Roxo", correct: false },
-        { text: "Laranja", correct: false },
-        { text: "Marrom", correct: false }
-      ]},
-      { question: "Qual é o maior osso do corpo humano?", answers: [
-        { text: "Fêmur", correct: true },
-        { text: "Tíbia", correct: false },
-        { text: "Úmero", correct: false },
-        { text: "Crânio", correct: false }
-      ]},
-      { question: "Qual desses é um navegador de internet?", answers: [
-        { text: "Google", correct: false },
-        { text: "Firefox", correct: true },
-        { text: "Youtube", correct: false },
-        { text: "Facebook", correct: false }
-      ]},
-      { question: "Quem escreveu 'Dom Casmurro'?", answers: [
-        { text: "Machado de Assis", correct: true },
-        { text: "Carlos Drummond", correct: false },
-        { text: "Clarice Lispector", correct: false },
-        { text: "Monteiro Lobato", correct: false }
-      ]},
-      { question: "Quantas patas tem uma aranha?", answers: [
-        { text: "6", correct: false },
-        { text: "8", correct: true },
-        { text: "10", correct: false },
-        { text: "4", correct: false }
-      ]},
-      { question: "Qual é o menor país do mundo?", answers: [
-        { text: "Mônaco", correct: false },
-        { text: "Ilhas Fiji", correct: false },
-        { text: "Vaticano", correct: true },
-        { text: "Malta", correct: false }
-      ]}
-    ];
 
-    let currentQuestionIndex = 0;
-    const questionText = document.getElementById("question-text");
-    const answerButtons = document.getElementById("answer-buttons");
-    const feedbackElement = document.getElementById("feedback");
-    const nextButton = document.getElementById("next-button");
+    <script>
 
-    function startQuiz() {
-      currentQuestionIndex = 0;
-      nextButton.style.display = "none";
-      showQuestion(questions[currentQuestionIndex]);
-    }
-
-    function showQuestion(question) {
-      questionText.innerText = question.question;
-      answerButtons.innerHTML = "";
-      feedbackElement.innerText = "";
-
-      question.answers.forEach(answer => {
-        const btn = document.createElement("button");
-        btn.innerText = answer.text;
-        btn.onclick = () => selectAnswer(answer);
-        answerButtons.appendChild(btn);
-      });
-    }
-
-    function selectAnswer(answer) {
-      if (answer.correct) {
-        feedbackElement.innerText = "Acertou! 😎";
-        feedbackElement.classList.add("correct");
-        feedbackElement.classList.remove("incorrect");
-      } else {
-        feedbackElement.innerText = "Errou feio! 😬";
-        feedbackElement.classList.add("incorrect");
-        feedbackElement.classList.remove("correct");
-      }
-      nextButton.style.display = "inline-block";
-    }
-
-    nextButton.onclick = () => {
-      currentQuestionIndex++;
-      if (currentQuestionIndex < questions.length) {
-        showQuestion(questions[currentQuestionIndex]);
-        nextButton.style.display = "none";
-      } else {
-        questionText.innerText = "🎉 Fim do Quiz! Você é brabo(a)!";
-        answerButtons.innerHTML = "";
-        feedbackElement.innerText = "";
-        nextButton.style.display = "none";
-      }
-    };
-
-    startQuiz();
-  </script>
-</body>
+        <script> 
+      </body>
 </html>
