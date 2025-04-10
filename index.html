@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Maluco</title>
+    <style>
+        body {
+            background: #222;
+            color: #fff;
+            font-family: 'Comic Sans MS', sans-serif;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .pergunta {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .resposta {
+            display: block;
+            background: #444;
+            color: #fff;
+            padding: 15px;
+            margin: 10px auto;
+            width: 300px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .resposta:hover {
+            background: #666;
+        }
+
+        #resultado {
+            margin-top: 30px;
+            font-size: 28px;
+            color: #00ffae;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Quiz Maluco 🤪</h1>
+    <div id="quiz">
+        <div class="pergunta" id="pergunta">Carregando...</div>
+        <div id="respostas"></div>
+    </div>
+
+    <div id="resultado"></div>
+
+    <script>
+        const quiz = [
+            {
+                pergunta: "Qual desses objetos você comeria no desespero?",
+                opcoes: ["Sabonete", "Cacto", "Chinelo", "Controle remoto"],
+                correta: 2 // só de zoeira
+            },
+            {
+                pergunta: "Quantas galinhas cabem num fusca?",
+                opcoes: ["1", "7", "42", "As que quiser, fé em Deus"],
+                correta: 3
+            },
+            {
+                pergunta: "Qual seu nível de maluquice?",
+                opcoes: ["Baixo", "Moderado", "Alto", "Totalmente insano 🤪"],
+                correta: 3
+            }
+        ];
+
+        let index = 0;
+        let acertos = 0;
+
+        function mostrarPergunta() {
+            const p = quiz[index];
+            document.getElementById("pergunta").innerText = p.pergunta;
+
+            const respostasDiv = document.getElementById("respostas");
+            respostasDiv.innerHTML = "";
+
+            p.opcoes.forEach((opcao, i) => {
+                const btn = document.createElement("div");
+                btn.classList.add("resposta");
+                btn.innerText = opcao;
+                btn.onclick = () => {
+                    if (i === p.correta) {
+                        acertos++;
+                        alert("🎉 Resposta malucamente certa!");
+                    } else {
+                        alert("❌ Errrrou, mas tudo bem, é maluquice mesmo!");
+                    }
+
+                    index++;
+                    if (index < quiz.length) {
+                        mostrarPergunta();
+                    } else {
+                        document.getElementById("quiz").style.display = "none";
+                        document.getElementById("resultado").innerText =
+                            `Fim do quiz! Você acertou ${acertos} de ${quiz.length} perguntas. 💥`;
+                    }
+                };
+                respostasDiv.appendChild(btn);
+            });
+        }
+
+        mostrarPergunta();
+    </script>
+
+</body>
+</html>
