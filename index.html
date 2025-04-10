@@ -1,110 +1,175 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Quiz Maluco</title>
-    <style>
-        body {
-            background: #222;
-            color: #fff;
-            font-family: 'Comic Sans MS', sans-serif;
-            text-align: center;
-            padding: 40px;
-        }
-
-        .pergunta {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .resposta {
-            display: block;
-            background: #444;
-            color: #fff;
-            padding: 15px;
-            margin: 10px auto;
-            width: 300px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .resposta:hover {
-            background: #666;
-        }
-
-        #resultado {
-            margin-top: 30px;
-            font-size: 28px;
-            color: #00ffae;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Quiz Maluco</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      color: #333;
+      text-align: center;
+      padding: 30px;
+    }
+    #quiz-container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    button {
+      padding: 12px 20px;
+      margin: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #7efff5;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #5ce1e6;
+    }
+    .feedback {
+      font-weight: bold;
+      margin-top: 20px;
+      font-size: 20px;
+    }
+    .correct {
+      color: green;
+    }
+    .incorrect {
+      color: red;
+    }
+  </style>
 </head>
 <body>
+  <div id="quiz-container">
+    <h1>Quiz Maluco 😜</h1>
+    <p id="question-text">Carregando pergunta...</p>
+    <div id="answer-buttons"></div>
+    <div id="feedback" class="feedback"></div>
+    <button id="next-button" style="display: none;">Próxima</button>
+  </div>
 
-    <h1>Quiz Maluco 🤪</h1>
-    <div id="quiz">
-        <div class="pergunta" id="pergunta">Carregando...</div>
-        <div id="respostas"></div>
-    </div>
+  <script>
+    const questions = [
+      { question: "Qual é a capital do Brasil?", answers: [
+        { text: "São Paulo", correct: false },
+        { text: "Rio de Janeiro", correct: false },
+        { text: "Brasília", correct: true },
+        { text: "Salvador", correct: false }
+      ]},
+      { question: "Quanto é 5 x 5?", answers: [
+        { text: "25", correct: true },
+        { text: "20", correct: false },
+        { text: "10", correct: false },
+        { text: "15", correct: false }
+      ]},
+      { question: "Qual animal late?", answers: [
+        { text: "Gato", correct: false },
+        { text: "Papagaio", correct: false },
+        { text: "Cachorro", correct: true },
+        { text: "Cavalo", correct: false }
+      ]},
+      { question: "Qual planeta é conhecido como Planeta Vermelho?", answers: [
+        { text: "Terra", correct: false },
+        { text: "Marte", correct: true },
+        { text: "Júpiter", correct: false },
+        { text: "Saturno", correct: false }
+      ]},
+      { question: "Que cor resulta da mistura de azul com amarelo?", answers: [
+        { text: "Verde", correct: true },
+        { text: "Roxo", correct: false },
+        { text: "Laranja", correct: false },
+        { text: "Marrom", correct: false }
+      ]},
+      { question: "Qual é o maior osso do corpo humano?", answers: [
+        { text: "Fêmur", correct: true },
+        { text: "Tíbia", correct: false },
+        { text: "Úmero", correct: false },
+        { text: "Crânio", correct: false }
+      ]},
+      { question: "Qual desses é um navegador de internet?", answers: [
+        { text: "Google", correct: false },
+        { text: "Firefox", correct: true },
+        { text: "Youtube", correct: false },
+        { text: "Facebook", correct: false }
+      ]},
+      { question: "Quem escreveu 'Dom Casmurro'?", answers: [
+        { text: "Machado de Assis", correct: true },
+        { text: "Carlos Drummond", correct: false },
+        { text: "Clarice Lispector", correct: false },
+        { text: "Monteiro Lobato", correct: false }
+      ]},
+      { question: "Quantas patas tem uma aranha?", answers: [
+        { text: "6", correct: false },
+        { text: "8", correct: true },
+        { text: "10", correct: false },
+        { text: "4", correct: false }
+      ]},
+      { question: "Qual é o menor país do mundo?", answers: [
+        { text: "Mônaco", correct: false },
+        { text: "Ilhas Fiji", correct: false },
+        { text: "Vaticano", correct: true },
+        { text: "Malta", correct: false }
+      ]}
+    ];
 
-    <div id="resultado"></div>
+    let currentQuestionIndex = 0;
+    const questionText = document.getElementById("question-text");
+    const answerButtons = document.getElementById("answer-buttons");
+    const feedbackElement = document.getElementById("feedback");
+    const nextButton = document.getElementById("next-button");
 
-    <script>
-        const quiz = [
-            {
-                pergunta: "Qual desses objetos você comeria no desespero?",
-                opcoes: ["Sabonete", "Cacto", "Chinelo", "Controle remoto"],
-                correta: 2 // só de zoeira
-            },
-            {
-                pergunta: "Quantas galinhas cabem num fusca?",
-                opcoes: ["1", "7", "42", "As que quiser, fé em Deus"],
-                correta: 3
-            },
-            {
-                pergunta: "Qual seu nível de maluquice?",
-                opcoes: ["Baixo", "Moderado", "Alto", "Totalmente insano 🤪"],
-                correta: 3
-            }
-        ];
+    function startQuiz() {
+      currentQuestionIndex = 0;
+      nextButton.style.display = "none";
+      showQuestion(questions[currentQuestionIndex]);
+    }
 
-        let index = 0;
-        let acertos = 0;
+    function showQuestion(question) {
+      questionText.innerText = question.question;
+      answerButtons.innerHTML = "";
+      feedbackElement.innerText = "";
 
-        function mostrarPergunta() {
-            const p = quiz[index];
-            document.getElementById("pergunta").innerText = p.pergunta;
+      question.answers.forEach(answer => {
+        const btn = document.createElement("button");
+        btn.innerText = answer.text;
+        btn.onclick = () => selectAnswer(answer);
+        answerButtons.appendChild(btn);
+      });
+    }
 
-            const respostasDiv = document.getElementById("respostas");
-            respostasDiv.innerHTML = "";
+    function selectAnswer(answer) {
+      if (answer.correct) {
+        feedbackElement.innerText = "Acertou! 😎";
+        feedbackElement.classList.add("correct");
+        feedbackElement.classList.remove("incorrect");
+      } else {
+        feedbackElement.innerText = "Errou feio! 😬";
+        feedbackElement.classList.add("incorrect");
+        feedbackElement.classList.remove("correct");
+      }
+      nextButton.style.display = "inline-block";
+    }
 
-            p.opcoes.forEach((opcao, i) => {
-                const btn = document.createElement("div");
-                btn.classList.add("resposta");
-                btn.innerText = opcao;
-                btn.onclick = () => {
-                    if (i === p.correta) {
-                        acertos++;
-                        alert("🎉 Resposta malucamente certa!");
-                    } else {
-                        alert("❌ Errrrou, mas tudo bem, é maluquice mesmo!");
-                    }
+    nextButton.onclick = () => {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        showQuestion(questions[currentQuestionIndex]);
+        nextButton.style.display = "none";
+      } else {
+        questionText.innerText = "🎉 Fim do Quiz! Você é brabo(a)!";
+        answerButtons.innerHTML = "";
+        feedbackElement.innerText = "";
+        nextButton.style.display = "none";
+      }
+    };
 
-                    index++;
-                    if (index < quiz.length) {
-                        mostrarPergunta();
-                    } else {
-                        document.getElementById("quiz").style.display = "none";
-                        document.getElementById("resultado").innerText =
-                            `Fim do quiz! Você acertou ${acertos} de ${quiz.length} perguntas. 💥`;
-                    }
-                };
-                respostasDiv.appendChild(btn);
-            });
-        }
-
-        mostrarPergunta();
-    </script>
-
+    startQuiz();
+  </script>
 </body>
 </html>
